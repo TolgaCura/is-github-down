@@ -8,15 +8,15 @@
     fetch('https://kctbh9vrtdwd.statuspage.io/api/v2/summary.json')
       .then(function (response) { return response.json() })
       .then(function (data) {
-        var outageFound = false
+        var outageText;
         for (var i = 0; i < data.components.length; i++) {
-          if (data.components[i].status.includes('outage')) outageFound = true
+          if (data.components[i].status.includes('major_outage')) {
+            outageText = 'yes.'
+          } else if (!outageText && data.components[i].status.includes('partial_outage')) {
+            outageText = 'maybe...'
+          }
         }
-
-        var outageText = 'maybe.'
-        if (outageFound) {
-          outageText = 'yes.'
-        }
+        if (!outageText) outageText = 'no!'
 
         document.getElementById('massive-app').innerText = outageText
 
